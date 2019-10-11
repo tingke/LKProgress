@@ -1,0 +1,24 @@
+{
+  "name": "LKProgress",
+  "version": "0.1.0",
+  "summary": "A short description of LKProgress.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/tingke/LKProgress",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "tingke": "liukun@dosing100.com"
+  },
+  "source": {
+    "git": "https://github.com/tingke/LKProgress.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "LKProgress/Classes/**/*",
+  "public_header_files": "Pod/Classes/**/*.h",
+  "frameworks": "UIKit"
+}

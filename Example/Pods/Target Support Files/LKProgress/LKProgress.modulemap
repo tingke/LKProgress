@@ -1,0 +1,6 @@
+framework module LKProgress {
+  umbrella header "LKProgress-umbrella.h"
+
+  export *
+  module * { export * }
+}

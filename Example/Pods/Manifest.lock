@@ -1,0 +1,16 @@
+PODS:
+  - LKProgress (0.1.0)
+
+DEPENDENCIES:
+  - LKProgress (from `../`)
+
+EXTERNAL SOURCES:
+  LKProgress:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  LKProgress: 0cc0da9fb59899c36ce07c38b17e87d677e19e00
+
+PODFILE CHECKSUM: 0af806fe003625c92f44b16ef22ecc309c3bde49
+
+COCOAPODS: 1.7.5
