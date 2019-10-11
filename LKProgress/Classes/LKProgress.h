@@ -21,11 +21,15 @@ typedef NS_ENUM(NSInteger, LKProgressMode) {
 
 @property(nonatomic, assign) LKProgressMode progressMode;
 
-@property(nonatomic, strong) UIColor *progressColor; // 进度条颜色
+@property(nonatomic, strong) UIColor *progressColor;  // 进度条颜色
 
-@property(nonatomic, assign) CGFloat  progressWidth;    // 进度条宽度
+@property(nonatomic, strong) UIColor *progressBackColor; // 背景颜色
 
-@property(nonatomic, assign) CGFloat progress;  // 进度
+@property(nonatomic, assign) CGFloat progressWidth;   // 进度条宽度
+
+@property(nonatomic, assign) CGFloat progress;        // 进度
+
+@property(nonatomic, assign) CGFloat startAngle;      // 开始角度，默认-M_PI_2
 
 @property(nonatomic, assign) CGFloat radius;
 

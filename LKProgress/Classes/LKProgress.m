@@ -12,7 +12,6 @@
 
 @property(nonatomic, strong) CAShapeLayer *backgroundLayer;
 @property(nonatomic, strong) CAShapeLayer *displayLayer;
-@property(nonatomic, strong) UIBezierPath *bezierPath;
 
 @end
 
@@ -32,32 +31,86 @@
     return self;
 }
 
+- (void)didInitialize {
+    self.layer.masksToBounds = YES;
+    self.radius = MIN(self.frame.size.width, self.frame.size.height) * 0.5;
+    self.progressColor = [UIColor redColor];
+    self.backgroundLayer.frame = self.layer.bounds;
+    self.backgroundLayer.hidden = YES;
+    [self.layer addSublayer:self.backgroundLayer];
+    self.displayLayer.frame = self.layer.bounds;
+    [self.layer addSublayer:self.displayLayer];
+}
+
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    
-    self.displayLayer.fillColor = self.progressColor.CGColor;
-    self.displayLayer.strokeColor = self.progressColor.CGColor;
-    
     UIBezierPath *path = nil;
+    CGFloat progress = 1.0;
+    
+    self.backgroundLayer.hidden = self.progressBackColor == nil;
+    if (self.progressBackColor) {
+        [self.layer insertSublayer:self.backgroundLayer below:self.displayLayer];
+        switch (self.progressMode) {
+            case LKProgressModeLine: {
+                CGPoint startPoint = CGPointMake(0, (rect.size.height-self.progressWidth)*0.5);
+                CGPoint endPoint = CGPointMake(rect.size.width * progress, (rect.size.height-self.progressWidth)*0.5);
+                path = [UIBezierPath bezierPath];
+                [path moveToPoint:startPoint];
+                [path addLineToPoint:endPoint];
+                self.backgroundLayer.strokeColor = self.progressBackColor.CGColor;
+            }break;
+            case LKProgressModePie:         case LKProgressModeArc: {
+                CGFloat startAngle = -M_PI_2;
+                CGFloat endAngle = startAngle + progress * M_PI * 2;
+                CGFloat radius = self.radius - (self.progressMode == LKProgressModePie?0:self.progressWidth);
+                CGPoint center = CGPointMake(rect.size.width * 0.5, rect.size.height * 0.5);
+                path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+                if (self.progressMode == LKProgressModePie) {
+                    [path addLineToPoint:center];
+                    self.backgroundLayer.strokeColor = [UIColor clearColor].CGColor;
+                    self.backgroundLayer.fillColor = self.progressBackColor.CGColor;
+                }else {
+                    self.backgroundLayer.fillColor = [UIColor clearColor].CGColor;
+                    self.backgroundLayer.strokeColor = self.progressBackColor.CGColor;
+                }
+            }break;
+            case LKProgressModeWave: {
+                
+            }break;
+            default:
+                break;
+        }
+        
+        self.backgroundLayer.lineWidth = self.progressWidth;
+        self.backgroundLayer.lineJoin = kCALineJoinRound;
+        self.backgroundLayer.lineCap = kCALineCapRound;
+        self.backgroundLayer.path = path.CGPath;
+    }
+    
+    progress = self.progress;
+    
     switch (self.progressMode) {
         case LKProgressModeLine: {
             CGPoint startPoint = CGPointMake(0, (rect.size.height-self.progressWidth)*0.5);
-            CGPoint endPoint = CGPointMake(rect.size.width * self.progress, (rect.size.height-self.progressWidth)*0.5);
+            CGPoint endPoint = CGPointMake(rect.size.width * progress, (rect.size.height-self.progressWidth)*0.5);
             path = [UIBezierPath bezierPath];
             [path moveToPoint:startPoint];
             [path addLineToPoint:endPoint];
+            self.displayLayer.strokeColor = self.progressColor.CGColor;
         }break;
         case LKProgressModePie:         case LKProgressModeArc: {
             CGFloat startAngle = -M_PI_2;
-            CGFloat endAngle = startAngle + self.progress * M_PI * 2;
+            CGFloat endAngle = startAngle + progress * M_PI * 2;
             CGFloat radius = self.radius - (self.progressMode == LKProgressModePie?0:self.progressWidth);
             CGPoint center = CGPointMake(rect.size.width * 0.5, rect.size.height * 0.5);
             path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
             if (self.progressMode == LKProgressModePie) {
                 [path addLineToPoint:center];
                 self.displayLayer.strokeColor = [UIColor clearColor].CGColor;
+                self.displayLayer.fillColor = self.progressColor.CGColor;
             }else {
                 self.displayLayer.fillColor = [UIColor clearColor].CGColor;
+                self.displayLayer.strokeColor = self.progressColor.CGColor;
             }
         }break;
         case LKProgressModeWave: {
@@ -71,14 +124,6 @@
     self.displayLayer.lineJoin = kCALineJoinRound;
     self.displayLayer.lineCap = kCALineCapRound;
     self.displayLayer.path = path.CGPath;
-}
-
-- (void)didInitialize {
-    self.layer.masksToBounds = YES;
-    self.radius = MIN(self.frame.size.width, self.frame.size.height) * 0.5;
-    self.progressColor = [UIColor redColor];
-    self.displayLayer.frame = self.layer.bounds;
-    [self.layer addSublayer:self.displayLayer];
 }
 
 ///MARK: - ————— Setter —————

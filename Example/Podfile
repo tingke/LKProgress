@@ -7,7 +7,5 @@ target 'LKProgress_Example' do
 
   target 'LKProgress_Tests' do
     inherit! :search_paths
-
-    
   end
 end
